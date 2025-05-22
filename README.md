@@ -1,74 +1,45 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# reactJs
->>>>>>> 31c97697793447bb15cbff629e340372414b7a56
+Soroto is a modern, responsive, and fully-featured eCommerce web application built with ReactJS, Redux Toolkit, and React Router DOM. It offers a seamless shopping experience with user authentication, profile management, product browsing, wishlist, cart management, and more.
+🚀 Features 🔐 User Authentication Sign Up / Sign In: Secure registration and login system.
+Profile Persistence: User session persistence with Redux and localStorage.
+Protected Routes: Access control for user-specific pages like Profile, Wishlist, and Cart.
+👤 Profile Management View and update user profile details including:
+Name
+Email
+Gender
+Date of Birth (DOB)
+Address
+All profile data managed with Redux Toolkit for consistent state updates.
+🛍️ Products Display product listings with images, prices, and descriptions.
+Detailed product view pages.
+Search and filter functionality for easy product discovery.
+❤️ Wishlist Add or remove products to/from personal wishlist.
+Wishlist persists across sessions.
+Move items from Wishlist to Cart easily.
+🛒 Cart Add products to shopping cart.
+Modify quantities or remove items.
+Checkout flow (can be extended with payment integration).
+🎨 UI / UX Responsive design for desktop and mobile devices.
+User-friendly forms with validation and error feedback.
+Smooth navigation using React Router DOM.
+📁 Project Structure src/ ├── components/ # React components ├── store/ # Redux Toolkit slices and store setup ├── pages/ # Route components (SignIn, SignUp, Profile, ProductDetail, etc.) ├── App.js # Main app component with routing ├── index.js # App entry point └── styles/ # CSS modules and global styles 🛠️ Installation & Setup Clone the repository:
+bash Copy Edit git clone https://github.com/your-username/soroto-ecommerce.git cd soroto-ecommerce Install dependencies:
+bash Copy Edit npm install Run the development server:
+bash Copy Edit npm start Open your browser and navigate to http://localhost:3000
+🧪 Testing Tests are written using React Testing Library and Vitest for:
+Form validations
+Component rendering
+Redux action dispatching
+To run tests:
+bash Copy Edit npm test 📋 Usage Register a new user or sign in with existing credentials.
+Browse products and use the search bar to filter.
+Click a product to view details.
+Add products to wishlist or cart.
+Manage profile details and update information anytime.
+Access wishlist and cart from your profile dropdown.
+🔧 Technologies Used ReactJS
+Redux Toolkit
+React Router DOM
+CSS Modules
+LocalStorage (for simple persistence)
+React Testing Library
+Vitest (test runner)
