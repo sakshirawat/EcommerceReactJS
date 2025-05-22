@@ -25,4 +25,4 @@ const wishlistSlice = createSlice({
 // Exporting the generated actions for use in dispatching
 export const wishlistActions = wishlistSlice.actions;
 // Exporting the reducer to be included in the store
-export default wishlistSlice;
+export default wishlistSlice.reducer;

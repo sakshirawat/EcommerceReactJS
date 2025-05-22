@@ -1,4 +1,5 @@
-import Card from '../UI/Card';
+import React from 'react';
+import Card from '../../components/UI/Card';
 import classes from './ProductItem.module.css';
 import { useDispatch } from 'react-redux';
 import { wishlistActions } from '../../store/wishlistSlice';

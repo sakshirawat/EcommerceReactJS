@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userSlice from "./userSlice";
+import userSlice from './userSlice';
 import wishlistSlice from "./wishlistSlice";
 import cartSlice from "./cartSlice";
 
@@ -7,13 +7,13 @@ import cartSlice from "./cartSlice";
 const store = configureStore({
   reducer: {
     // User slice manages user-related state (e.g., authentication, profile)
-    user: userSlice.reducer,
+    user: userSlice,
 
     // Wishlist slice manages items added to the user's wishlist
-    wishlist: wishlistSlice.reducer,
+    wishlist: wishlistSlice,
 
     // Cart slice manages items added to the shopping cart
-    cart: cartSlice.reducer,
+    cart: cartSlice,
   },
 });
 

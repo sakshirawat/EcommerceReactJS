@@ -38,4 +38,4 @@ const userSlice = createSlice({
 export const userActions = userSlice.actions;
 
 // Export the reducer function to be used in the Redux store
-export default userSlice;
+export default userSlice.reducer;

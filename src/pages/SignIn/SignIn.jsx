@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
-import styles from './SignUp.module.css';
+import styles from './SignIn.module.css';
 import { useNavigate } from 'react-router-dom';  
 import { useDispatch } from 'react-redux';
-import { userActions } from '../store/userSlice';
+import { userActions } from '../../store/userSlice';
 
 const SignIn = () => {
-  // Get registered users from localStorage or set to empty array if not found
-  let users = JSON.parse(localStorage.getItem('users') || '[]');
-
-  // State for form inputs
+  // State variables for user input
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // State for error messages
+  // Error state to track validation messages
   const [errors, setErrors] = useState({ email: '', password: '', credentials: '' });
 
-  // React Router's hook to navigate programmatically
-  const navigate = useNavigate(); 
+  // React Router hook to navigate programmatically
+  const navigate = useNavigate();
 
-  // Redux dispatch function
+  // Redux dispatch to update global user state
   const dispatch = useDispatch();
 
-  // Input validation logic
+  // Function to validate email and password inputs
   const validateInputs = () => {
-    let valid = true;
     const newErrors = { email: '', password: '', credentials: '' };
-
-    // Check if email is empty or not in valid format
+    let valid = true;
+  
     if (!email) {
       newErrors.email = 'Email is required';
       valid = false;
@@ -34,40 +30,59 @@ const SignIn = () => {
       newErrors.email = 'Invalid email format';
       valid = false;
     }
-
-    // Check if password is empty
+  
     if (!password) {
       newErrors.password = 'Password is required';
       valid = false;
     }
-
-    // Update error state
+  
     setErrors(newErrors);
     return valid;
   };
+  
+  // Handlers for input changes and clearing credential error message
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (errors.credentials) setErrors(prev => ({ ...prev, credentials: '' }));
+  };
 
-  // Form submission handler
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (errors.credentials) setErrors(prev => ({ ...prev, credentials: '' }));
+  };
+
+  // Submit handler for login form
   function handleSubmitSignIn(e) {
-    e.preventDefault(); // Prevent default form behavior (page reload)
+    e.preventDefault();
+  
+    const isValid = validateInputs();
+    if (!isValid) return;
 
-    if (!validateInputs()) return; // If validation fails, exit early
+    // Retrieve users from localStorage (if any)
+    const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
 
-    // Check if a user with entered credentials exists
+    // Fallback test user (for development/demo)
+    const testUsers = [
+      { email: 'test@example.com', password: 'pass123', name: 'Test User' },
+    ];
+
+    // Combine both lists
+    const users = [...storedUsers, ...testUsers];
+
+    // Attempt to match entered credentials with existing users
     const loggedInUser = users.find(
       (user) => user.email === email && user.password === password
     );
 
+    // Show error if credentials don't match
     if (!loggedInUser) {
-      // Show error message if login fails
-      setErrors((prev) => ({ ...prev, credentials: 'Incorrect email or password' }));
+      setErrors(prev => ({ ...prev, credentials: 'Incorrect email or password' }));
       return;
     }
 
-    // Dispatch login action to Redux store
+    // Log user in via Redux and redirect to homepage
     dispatch(userActions.signIn(loggedInUser));
-
-    // Redirect user to products page
-    navigate('/products');
+    navigate('/');
   }
 
   return (
@@ -78,35 +93,39 @@ const SignIn = () => {
         <div className={styles.modalDialog}>
           <h2>Sign In</h2>
 
-          {/* Sign In form */}
-          <form onSubmit={handleSubmitSignIn}>
+          {/* Sign-in form */}
+          <form onSubmit={handleSubmitSignIn} noValidate>
+            {/* Email input field */}
             <div>
-              <label>Email:</label>
+              <label htmlFor="email">Email:</label>
               <input
+                id="email"
                 className={styles.modalInput}
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
+                autoComplete="email"
               />
-              {/* Email validation message */}
               {errors.email && <p className={styles.error}>{errors.email}</p>}
             </div>
 
+            {/* Password input field */}
             <div>
-              <label>Password:</label>
+              <label htmlFor="password">Password:</label>
               <input
+                id="password"
                 className={styles.modalInput}
                 type="password"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
+                autoComplete="current-password"
               />
-              {/* Password validation message */}
               {errors.password && <p className={styles.error}>{errors.password}</p>}
             </div>
 
-            {/* Login failure message */}
+            {/* Error message for invalid credentials */}
             {errors.credentials && <p className={styles.error}>{errors.credentials}</p>}
 
             {/* Submit button */}
@@ -115,7 +134,7 @@ const SignIn = () => {
             </button>
           </form>
 
-          {/* Close button to go back */}
+          {/* Close button to navigate back */}
           <button className={styles.modalButton} onClick={() => navigate('/', { replace: true })}>
             Close
           </button>

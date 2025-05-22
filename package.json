@@ -4,11 +4,8 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.7.0",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.21",
+    "history": "^5.3.0",
     "postcss": "^8.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -23,8 +20,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test": "vitest"
   },
   "eslintConfig": {
     "extends": [
@@ -43,5 +40,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "jest": "^27.5.1",
+    "jsdom": "^26.1.0",
+    "redux-mock-store": "^1.5.5",
+    "vitest": "^3.1.4"
   }
 }
