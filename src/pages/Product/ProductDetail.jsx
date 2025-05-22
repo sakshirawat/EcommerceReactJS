@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';  // <-- added useSelector
 import styles from './ProductDetail.module.css';
 import { cartActions } from '../../store/cartSlice';
 import { wishlistActions } from '../../store/wishlistSlice';
@@ -9,39 +9,44 @@ const ProductDetail = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  // Get product data passed via state from navigation
+  // Get currentUser from Redux state to check login status
+  const currentUser = useSelector(state => state.user.currentUser);
+  const isLoggedIn = currentUser !== null;
+
   const product = location.state?.product;
 
-  // Local state for quantity selector, default 1
   const [quantity, setQuantity] = useState(1);
 
   if (!product) {
-    // Handle missing product info gracefully
     return <p>Product not found.</p>;
   }
 
-  // Handlers for quantity increment/decrement
   const decreaseQuantity = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+    setQuantity(prev => (prev > 1 ? prev - 1 : 1));
   };
 
   const increaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
+    setQuantity(prev => prev + 1);
   };
 
-  // Dispatch add to cart action with product and quantity
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      alert('Please login first');
+      return;
+    }
     dispatch(cartActions.addToCart({ ...product, quantity }));
   };
 
-  // Dispatch add to wishlist action
   const handleAddToWishlist = () => {
+    if (!isLoggedIn) {
+      alert('Please login first');
+      return;
+    }
     dispatch(wishlistActions.addtoWishlist(product));
   };
 
   return (
     <div className={styles.productDetailContainer}>
-      {/* First row: Image and product info */}
       <div className={styles.topRow}>
         <img
           src={product.image}
@@ -52,7 +57,6 @@ const ProductDetail = () => {
           <h2>{product.title}</h2>
           <h3>${product.price.toFixed(2)}</h3>
 
-          {/* Quantity selector with +/- buttons and display */}
           <div className={styles.quantitySelector}>
             <button onClick={decreaseQuantity} className={styles.qtyBtn}>-</button>
             <span className={styles.qtyDisplay}>{quantity}</span>
@@ -70,7 +74,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Second row: Description and Shipping Policy side-by-side */}
       <div className={styles.bottomRow}>
         <div className={styles.description}>
           <h4>Description</h4>
