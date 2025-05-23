@@ -17,7 +17,7 @@ const Header3 = ({ onCategorySelect }) => {
   };
 
   return (
-    <nav className="flex flex-col md:flex-row items-center justify-between bg-gray-800 text-white px-5 py-3 md:py-2 gap-3 md:gap-0">
+    <nav className="flex flex-col md:flex-row items-center justify-between bg-gray-800 text-white px-4  py-8 md:py-8 gap-3 md:gap-0">
       
       {/* Toggle Button for Categories */}
       <button
@@ -32,7 +32,7 @@ const Header3 = ({ onCategorySelect }) => {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          className="w-6 h-6"
+          className="w-6 h-6 ml-4"
           aria-hidden="true"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -72,7 +72,7 @@ const Header3 = ({ onCategorySelect }) => {
             onClick={() => handleCategoryClick('jewelery')}
             className="text-sm md:text-base hover:underline focus:outline-none"
           >
-            JEWELRY
+            JEWELLRY
           </button>
         </div>
       )}

@@ -11,7 +11,10 @@ const Footer = () => {
         
         {/* Logo and brand name section */}
         <div className="flex flex-col items-center sm:items-start flex-1 min-w-[150px] text-center sm:text-left">
-          <img src={logo} alt="Logo" className="w-20 mb-2" /> {/* Company logo */}
+        <Link to="/">
+             <img src={logo} alt="Logo" className="w-20 mb-2 cursor-pointer" />
+        </Link>
+
           <p className="font-bold text-xl">SOROTO</p> {/* Company name */}
         </div>
 
