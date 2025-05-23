@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -25,13 +26,13 @@ import ProtectedRoute from './pages/ProtectedRoutes';
 import ProductDetail from './pages/Product/ProductDetail';
 
 // Footer pages
-import TermsAndCondition from './components/Footer/TermsAndCondition';
-import PrivacyPolicy from './components/Footer/PrivacyPolicy';
-import FAQ from './components/Footer/FAQ';
-import ContactUs from './components/Footer/ContactUS';
-import Profile from './components/Footer/Profile';
-import MyOrders from './components/Footer/myOrders';
-import Settings from './components/Footer/setting';
+import TermsAndCondition from './pages/TermsAndCondition/TermsAndCondition';
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import FAQ from './pages/FAQ/FAQ';
+import ContactUs from './pages/ContactUs/ContactUS';
+import Profile from './pages/Profile/Profile';
+import MyOrders from './pages/MyOrders/myOrders';
+import Settings from './pages/setting/setting';
 
 // Footer component
 import Footer from './components/Footer/Footer';

@@ -1,31 +1,30 @@
 import React, { useState } from 'react';
-import styles from './SignUp.module.css';
-import { useNavigate } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
-  // Form state
+  // State to hold form input values
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // State to track validation errors
+  // State to hold error messages for each input field
   const [errors, setErrors] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate(); // React Router hook for navigation
 
-  // Validation function
+  // Function to validate the form inputs before submission
   const validateForm = () => {
-    let valid = true;
+    let valid = true; // Flag to track overall form validity
     const newErrors = { name: '', email: '', password: '', confirmPassword: '' };
 
-    // Name validation
+    // Name validation - required and trimmed
     if (!name.trim()) {
       newErrors.name = 'Name is required';
       valid = false;
     }
 
-    // Email format validation
+    // Email validation - required and must match email pattern
     if (!email.trim()) {
       newErrors.email = 'Email is required';
       valid = false;
@@ -34,7 +33,7 @@ const SignUp = () => {
       valid = false;
     }
 
-    // Password validation
+    // Password validation - required and minimum length
     if (!password) {
       newErrors.password = 'Password is required';
       valid = false;
@@ -43,7 +42,7 @@ const SignUp = () => {
       valid = false;
     }
 
-    // Confirm password validation
+    // Confirm password validation - required and must match password
     if (!confirmPassword) {
       newErrors.confirmPassword = 'Please confirm your password';
       valid = false;
@@ -52,113 +51,125 @@ const SignUp = () => {
       valid = false;
     }
 
-    // Set error messages to state
+    // Update the error state with validation messages
     setErrors(newErrors);
     return valid;
   };
 
-  // Handle form submission
-  function handleSubmitSignUp(e) {
-    e.preventDefault();
+  // Handler for form submission
+  const handleSubmitSignUp = (e) => {
+    e.preventDefault(); // Prevent default form submit behavior (page reload)
 
-    if (!validateForm()) return; // Stop submission if form is invalid
+    // Validate form and return early if invalid
+    if (!validateForm()) return;
 
-    // Create new user object
-    const submittedData = { name, email, password };
+    // Create a new user object from form inputs
+    const newUser = { name, email, password };
 
-    let existingUsers = [];
+    let users = [];
 
-    // Safely retrieve existing users from localStorage
+    // Attempt to retrieve existing users from localStorage
     try {
       const stored = JSON.parse(localStorage.getItem('users'));
-      if (Array.isArray(stored)) {
-        existingUsers = stored;
-      }
+      if (Array.isArray(stored)) users = stored;
     } catch {
-      existingUsers = [];
+      // If parsing fails, ignore and continue with empty array
     }
 
-    // Save new user to localStorage
-    existingUsers.push(submittedData);
-    localStorage.setItem('users', JSON.stringify(existingUsers));
+    // Add the new user to the users array
+    users.push(newUser);
 
-    // Navigate to Sign In page after successful registration
+    // Store updated users array back in localStorage
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Redirect user to the sign-in page after successful sign-up
     navigate('/signin');
-  }
+  };
 
   return (
-    <div>
-      <div className={styles.modalContainer}>
-        <div className={styles.modalBackground}></div>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Background overlay to dim content behind modal */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
 
-        <div className={styles.modalDialog}>
-          <h2>Sign Up</h2>
+      {/* Modal container */}
+      <div className="relative bg-white rounded-lg shadow-lg w-[90%] max-w-md p-6 z-50">
+        <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
 
-          {/* Sign Up form */}
-          <form onSubmit={handleSubmitSignUp}>
-            {/* Name Input */}
-            <div>
-              <label>Name:</label>
-              <input
-                className={styles.modalInput}
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              {errors.name && <p className={styles.error}>{errors.name}</p>}
-            </div>
+        <form onSubmit={handleSubmitSignUp}>
+          {/* Name input */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Name:</label>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded"
+            />
+            {/* Name validation error */}
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+          </div>
 
-            {/* Email Input */}
-            <div>
-              <label>Email:</label>
-              <input
-                className={styles.modalInput}
-                type="text"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {errors.email && <p className={styles.error}>{errors.email}</p>}
-            </div>
+          {/* Email input */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Email:</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded"
+            />
+            {/* Email validation error */}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+          </div>
 
-            {/* Password Input */}
-            <div>
-              <label>Password:</label>
-              <input
-                className={styles.modalInput}
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {errors.password && <p className={styles.error}>{errors.password}</p>}
-            </div>
+          {/* Password input */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Password:</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded"
+            />
+            {/* Password validation error */}
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+          </div>
 
-            {/* Confirm Password Input */}
-            <div>
-              <label>Confirm Password:</label>
-              <input
-                className={styles.modalInput}
-                type="password"
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              {errors.confirmPassword && <p className={styles.error}>{errors.confirmPassword}</p>}
-            </div>
+          {/* Confirm Password input */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Confirm Password:</label>
+            <input
+              type="password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded"
+            />
+            {/* Confirm password validation error */}
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+            )}
+          </div>
 
-            {/* Submit Button */}
-            <button className={styles.modalButton} type="submit">
-              Submit
-            </button>
-          </form>
-
-          {/* Close Button to go back */}
-          <button className={styles.modalButton} onClick={() => navigate(-1)}>
-            Close
+          {/* Submit button */}
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition"
+          >
+            Submit
           </button>
-        </div>
+        </form>
+
+        {/* Close button to navigate back */}
+        <button
+          onClick={() => navigate(-1)}
+          className="w-full mt-3 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded transition"
+        >
+          Close
+        </button>
       </div>
     </div>
   );

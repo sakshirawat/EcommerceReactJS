@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import styles from './Cart.module.css';
 import { cartActions } from '../../store/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
@@ -8,51 +7,54 @@ import { FaArrowRight } from 'react-icons/fa';
 const Cart = () => {
   // Get cart items from Redux store
   const cartItems = useSelector((state) => state.cart.items);
-  // Local state to track currently applied coupon code
+
+  // Redux dispatcher to modify cart state
+  const dispatch = useDispatch();
+
+  // Hook for navigating programmatically
+  const navigate = useNavigate();
+
+  // Local state for coupon code input and whether it's applied
+  const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApllied] = useState();
-  // Calculate subtotal price of all items in cart
+  const [discountedTotal, setDiscountedTotal] = useState(0);
+
+  // Calculate cart subtotal
   const cartSubtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  // Local state for coupon code input and discounted total
-  const [couponCode, setCouponCode] = useState('');
-  const [discountedTotal, setDiscountedTotal] = useState(0);
-
-  // Predefined coupon codes with their types and values
+  // Hardcoded coupon definitions
   const couponsCode = {
-    FLAT50: { type: 'flat', value: 50 }, // $50 flat discount
-    SAVE30: { type: 'percent', value: 0.30 }, // 30% discount
+    FLAT50: { type: 'flat', value: 50 },       // Flat $50 off
+    SAVE30: { type: 'percent', value: 0.3 },   // 30% off
   };
 
-  // Handle applying coupon code
+  // Handle coupon code application
   const handleCoupon = () => {
     const coupon = couponsCode[couponCode.trim().toUpperCase()];
-    // Calculate total cart amount again in case it changed
     const totalAmount = cartItems.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0
     );
-  
+
     if (coupon) {
       let discountValue = 0;
-  
-      // Calculate discount based on coupon type
+
+      // Determine the discount amount
       if (coupon.type === 'flat') {
         discountValue = coupon.value;
       } else if (coupon.type === 'percent') {
         discountValue = totalAmount * coupon.value;
       }
-  
-      // Ensure discount doesn't exceed total amount
+
+      // Apply coupon only if discount is valid
       if (discountValue < totalAmount) {
         const newTotal = totalAmount - discountValue;
-        setDiscountedTotal(newTotal); // Update discounted total in state
-        setCouponApllied(couponCode.toUpperCase()); // Save applied coupon code
-        setCouponCode(''); // Clear input field
+        setDiscountedTotal(newTotal);
+        setCouponApllied(couponCode.toUpperCase());
+        setCouponCode('');
       } else {
         alert('Add more items to apply this coupon.');
       }
@@ -60,107 +62,130 @@ const Cart = () => {
       alert('Invalid coupon code');
     }
   };
-  
-  // Remove an item from the cart
+
+  // Cart item operations
   const handleRemove = (item) => {
     dispatch(cartActions.removeFromCart(item));
   };
 
-  // Increase item quantity in cart by 1
   const handleIncrease = (item) => {
     dispatch(cartActions.increaseQuantity(item));
   };
 
-  // Decrease item quantity in cart by 1 (minimum 1)
   const handleDecrease = (item) => {
     dispatch(cartActions.decreaseQuantity(item));
   };
 
-  // Close cart overlay if clicking outside the cart container
+  // Close cart modal on overlay click
   const handleOverlayClick = (e) => {
-    if (e.target.classList.contains(styles.overlay)) {
-      navigate(-1); // Go back in history (close modal)
+    if (e.target.classList.contains('overlay')) {
+      navigate(-1); // Go back to previous page
     }
   };
 
-  // Total amount before discount
+  // Determine final amount (with or without discount)
   const totalAmount = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-
-  // Use discounted total if coupon applied, else total amount
   const finalTotal = discountedTotal > 0 ? discountedTotal : totalAmount;
 
   return (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.cartContainer}>
-        <h2>My Cart</h2>
+    <div
+      className="overlay fixed inset-0 flex justify-center items-center bg-black bg-opacity-30 backdrop-blur-sm z-50"
+      onClick={handleOverlayClick}
+    >
+      <div className="cartContainer bg-white p-5 rounded-lg border border-gray-300 shadow-md w-[90%] max-w-4xl max-h-[90vh] overflow-auto">
+        <h2 className="text-2xl font-semibold mb-4">My Cart</h2>
+
         {cartItems.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
-          <div className={styles.cartContent}>
-            <ul className={styles.cartList}>
-              {/* Render each cart item */}
+          <div className="cartContent flex flex-col lg:flex-row justify-between items-start gap-6">
+            {/* Cart item list */}
+            <ul className="cartList flex-2 list-none p-0 w-full lg:w-2/3 overflow-auto max-h-[60vh]">
               {cartItems.map((item, index) => (
-                <li key={index} className={styles.cartItem}>
-                  <img src={item.image} alt={item.title} className={styles.image} />
-                  <div className={styles.details}>
-                    <div className={styles.titleRow}>
-                      <h4 className={styles.itemTitle}>{item.title}</h4>
+                <li key={index} className="cartItem flex items-center mb-4 last:mb-0">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-20 h-20 object-cover mr-4 rounded"
+                  />
+                  <div className="details flex-1">
+                    <div className="titleRow flex justify-between items-center mb-1">
+                      <h4 className="itemTitle text-lg font-medium m-0">
+                        {item.title}
+                      </h4>
                       <button
-                        className={styles.removeBtn}
+                        className="removeBtn bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded ml-4"
                         onClick={() => handleRemove(item)}
                       >
                         Remove
                       </button>
                     </div>
                     <p>Price: ${item.price.toFixed(2)}</p>
-                    {/* Quantity controls */}
-                    <div className={styles.quantityControl}>
-                      <button onClick={() => handleDecrease(item)}>-</button>
+                    <div className="quantityControl flex items-center gap-3 mt-2">
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        onClick={() => handleDecrease(item)}
+                      >
+                        -
+                      </button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => handleIncrease(item)}>+</button>
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        onClick={() => handleIncrease(item)}
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 </li>
               ))}
 
-              {/* Coupon input and apply button */}
-              <li className={styles.couponRow}>
+              {/* Coupon input section */}
+              <li className="couponRow flex items-center gap-3 mt-6">
                 <input
                   type="text"
                   placeholder="Enter coupon code"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value)}
-                  className={styles.couponInput}
+                  className="couponInput p-2 border border-gray-300 rounded w-48 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <FaArrowRight
-                  className={styles.couponArrow}
+                  className="couponArrow text-xl cursor-pointer text-blue-600 hover:text-blue-700"
                   onClick={handleCoupon}
                   title="Apply Coupon"
                 />
               </li>
             </ul>
 
-            {/* Total and checkout section */}
-            <div className={styles.totalColumn}>
-              <h5>Cart Subtotal: ${cartSubtotal.toFixed(2)}</h5>
-              {/* Show discount info if coupon applied */}
+            {/* Total summary section */}
+            <div className="totalColumn flex-1 text-right pl-6 w-full lg:w-1/3">
+              <h5 className="text-lg font-semibold">
+                Cart Subtotal: ${cartSubtotal.toFixed(2)}
+              </h5>
+
+              {/* If discount is applied, show summary */}
               {discountedTotal > 0 && (
-                <div>
-                  <p className={styles.discountedText}>
-                    Discount Applied: 
-                    <strong>-${(totalAmount - finalTotal).toFixed(2)}</strong>
+                <div className="mt-3">
+                  <p className="discountedText text-red-600">
+                    Discount Applied:{' '}
+                    <strong>
+                      -${(totalAmount - finalTotal).toFixed(2)}
+                    </strong>
                     <br />
                     using coupon: <strong>{couponApplied}</strong>
                   </p>
-                  <p className={styles.discountedText}>
+                  <p className="discountedText text-green-700 font-semibold">
                     New Total: ${finalTotal.toFixed(2)}
                   </p>
                 </div>
               )}
-              <button className={styles.checkoutBtn}>Checkout</button>
+
+              <button className="checkoutBtn mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded w-full lg:w-auto">
+                Checkout
+              </button>
             </div>
           </div>
         )}
